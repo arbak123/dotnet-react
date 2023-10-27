@@ -1,7 +1,31 @@
+from typing import Any
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 # Create your models here.
+
+
+class MyAccountManager(BaseUserManager):
+    def create_user(
+        self, first_name, last_name,
+        email, username, password=None
+    ):
+        if not email:
+            raise ValueError('user must have an email')
+
+        if not username:
+            raise ValueError('user must hace an username')
+
+        user = self.model(
+            email = self.normalize_email(email),
+            first_name = first_name,
+            last_name = last_name,
+            username = username,
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
 
 class Account(AbstractBaseUser):
@@ -37,5 +61,13 @@ class Account(AbstractBaseUser):
 
     ]
 
+    objects = MyAccountManager()
+
     def __str__(self) -> str:
         return self.email
+
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+
+    def has_module_perm(self, add_label):
+        return True
