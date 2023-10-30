@@ -6,10 +6,28 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class MyAccountManager(BaseUserManager):
+    """
+    A custom manager for the Account model that provides helper
+    methods for creating users and superusers.
+    """
     def create_user(
         self, first_name, last_name,
         email, username, password=None
     ):
+        """
+        Create and return a user with the given first name,
+        last name, email, username, and password.
+
+        Raises:
+        -------
+        ValueError:
+            If the email or username is not provided.
+
+        Returns:
+        --------
+        Account:
+            The created user account.
+        """
         if not email:
             raise ValueError('user must have an email')
 
@@ -31,6 +49,17 @@ class MyAccountManager(BaseUserManager):
         self, first_name, last_name,
         email, username, password
     ):
+        """
+        Create and return a superuser with the given first name,
+        last name, email, username, and password.
+
+        A superuser has all the permissions set to True by default.
+
+        Returns:
+        --------
+        Account:
+            The created superuser account.
+        """
         user = self.create_user(
             email=self.normalize_email(email),
             first_name=first_name,
