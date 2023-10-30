@@ -17,14 +17,34 @@ class MyAccountManager(BaseUserManager):
             raise ValueError('user must hace an username')
 
         user = self.model(
-            email = self.normalize_email(email),
-            first_name = first_name,
-            last_name = last_name,
-            username = username,
+            email=self.normalize_email(email),
+            first_name=first_name,
+            last_name=last_name,
+            username=username,
         )
 
         user.set_password(password)
         user.save(using=self._db)
+        return user
+
+    def create_superuser(
+        self, first_name, last_name,
+        email, username, password
+    ):
+        user = self.create_user(
+            email=self.normalize_email(email),
+            first_name=first_name,
+            last_name=last_name,
+            username=username,
+            password=password
+        )
+
+        user.is_admin = True
+        user.is_staff = True
+        user.is_active = True
+        user.is_superadmin = True
+
+        user.save()
         return user
 
 
@@ -43,7 +63,7 @@ class Account(AbstractBaseUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     user_name = models.CharField(max_length=50, unique=True)
-    email = models.CharField(max_length=100, unique=True)
+    email = models.EmailField(max_length=100, unique=True)
     phone_number = models.CharField(max_length=50)
 
     # defect atributes from django
@@ -56,7 +76,7 @@ class Account(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
-        'usename', 'first_name',
+        'username', 'first_name',
         'last_name'
 
     ]
