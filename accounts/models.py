@@ -12,7 +12,7 @@ class MyAccountManager(BaseUserManager):
     """
     def create_user(
         self, first_name, last_name,
-        email, username, password=None
+        email, user_name, password=None
     ):
         """
         Create and return a user with the given first name,
@@ -31,14 +31,14 @@ class MyAccountManager(BaseUserManager):
         if not email:
             raise ValueError('user must have an email')
 
-        if not username:
-            raise ValueError('user must hace an username')
+        if not user_name:
+            raise ValueError('user must have an username')
 
         user = self.model(
             email=self.normalize_email(email),
             first_name=first_name,
             last_name=last_name,
-            username=username,
+            user_name=user_name,
         )
 
         user.set_password(password)
@@ -47,7 +47,7 @@ class MyAccountManager(BaseUserManager):
 
     def create_superuser(
         self, first_name, last_name,
-        email, username, password
+        email, user_name, password
     ):
         """
         Create and return a superuser with the given first name,
@@ -64,7 +64,7 @@ class MyAccountManager(BaseUserManager):
             email=self.normalize_email(email),
             first_name=first_name,
             last_name=last_name,
-            username=username,
+            user_name=user_name,
             password=password
         )
 
@@ -105,7 +105,7 @@ class Account(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
-        'username', 'first_name',
+        'user_name', 'first_name',
         'last_name'
 
     ]
@@ -113,10 +113,22 @@ class Account(AbstractBaseUser):
     objects = MyAccountManager()
 
     def __str__(self) -> str:
+        """
+        Returns a string representation of the user,
+        using their email address.
+        """
         return self.email
 
     def has_perm(self, perm, obj=None):
+        """
+        Checks if the user has a specific permission.
+        In this setup, only admin users have all permissions.
+        """
         return self.is_admin
 
     def has_module_perm(self, add_label):
+        """
+        Checks if the user has permissions for a given app label.
+        In this setup, all users have module permissions.
+        """
         return True
