@@ -80,7 +80,7 @@ class MyAccountManager(BaseUserManager):
 class Account(AbstractBaseUser):
     """
     Custom user model representing an account in the system,
-    extending AbstractBaseUser to allow customized authentication 
+    extending AbstractBaseUser to allow customized authentication
     using email as the unique identifier.
 
     Additional attributes include basic personal information, account status,
@@ -109,6 +109,9 @@ class Account(AbstractBaseUser):
         'last_name'
 
     ]
+
+    class Meta:
+        verbose_name_plural = 'Usr Accounts'
 
     objects = MyAccountManager()
 

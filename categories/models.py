@@ -1,11 +1,11 @@
 from django.db import models
 
 
-class Category(models.Model):
+class Categories(models.Model):
     """Database Model for products categories.
 
     This model represents a product category in the database.
-    Each category has a unique name, amd opcitonal description,
+    Each category has a unique name, and opcional description,
     a unique slug for the url and an opcional associated image.
 
     Fields:
